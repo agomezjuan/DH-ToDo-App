@@ -15,16 +15,14 @@ function loginValidation() {
     validated = true;
   }
 
-  inputPassword.addEventListener("blur", () => {
-    if (inputPassword.value == "") {
-      validated = false;
-      inputPassword.style.border = "1px solid red";
-      console.log("Escriba su contraseña.");
-    } else {
-      inputEmail.style.border = "1px solid #f2f2f2";
-      validated = true;
-    }
-  });
+  if (inputPassword.value == "" || inputPassword.value.length < 2) {
+    validated = false;
+    inputPassword.style.border = "1px solid red";
+    console.log("Escriba su contraseña.");
+  } else {
+    inputEmail.style.border = "1px solid #f2f2f2";
+    validated = true;
+  }
 
   return validated ? true : false;
 }
