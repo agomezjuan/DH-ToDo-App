@@ -1,8 +1,12 @@
-//Constantes
+// Constantes
+const inputNombre = document.querySelector("#inputNombre");
+const inputApellido = document.querySelector("#inputApellido");
+const inputEmail = document.querySelector("#inputEmail");
+const inputPassword = document.querySelector("#inputPassword");
+const checkPassword = document.querySelector("#checkPassword");
 
+// Validacion de inicio de sesion
 function loginValidation() {
-  const inputEmail = document.querySelector("#inputEmail");
-  const inputPassword = document.querySelector("#inputPassword");
   let validated;
   const regexEmail = /^[^@\s]+@[^@\.\s]+(\.[^@\.\s]+)+$/;
 
@@ -27,7 +31,98 @@ function loginValidation() {
   return validated ? true : false;
 }
 
-function signupValidation() {}
+//Validacion de registro de nuevo usuario
+function signupValidation() {
+  let validated;
+  const regexNombre = /^[a-zA-Z]+(?:\s+[a-zA-Z]+)*$/;
+  const regexEmail = /^[^@\s]+@[^@\.\s]+(\.[^@\.\s]+)+$/;
+
+  function testNombre() {
+    if (!regexNombre.test(inputNombre.value.trim())) {
+      validated = false;
+      console.log("El nombre no puede incluir numeros.");
+      inputNombre.style.border = "1px solid red";
+    } else {
+      inputNombre.style.border = "1px solid #f2f2f2";
+      validated = true;
+    }
+  }
+
+  function testApellido() {
+    if (!regexNombre.test(inputApellido.value.trim())) {
+      validated = false;
+      console.log("El apellido no puede incluir numeros.");
+      inputApellido.style.border = "1px solid red";
+    } else {
+      inputApellido.style.border = "1px solid #f2f2f2";
+      validated = true;
+    }
+  }
+
+  function testEmail() {
+    if (!regexEmail.test(inputEmail.value)) {
+      validated = false;
+      console.log("El texto no es un email válido.");
+      inputEmail.style.border = "1px solid red";
+    } else {
+      inputEmail.style.border = "1px solid #f2f2f2";
+      validated = true;
+    }
+  }
+
+  function testPassword() {
+    if (inputPassword.value == "" || inputPassword.value.length < 2) {
+      validated = false;
+      inputPassword.style.border = "1px solid red";
+      console.log("Escriba su contraseña.");
+    } else {
+      inputEmail.style.border = "1px solid #f2f2f2";
+      validated = true;
+    }
+
+    if (
+      inputPassword.value !== checkPassword.value ||
+      inputPassword.value == ""
+    ) {
+      console.log("las contraseñas no coinciden");
+      inputPassword.style.border = "1px solid red";
+      checkPassword.style.border = "1px solid red";
+      validated = false;
+    } else {
+      console.log("las contraseñas son iguales");
+      inputPassword.style.border = "1px solid #f2f2f2";
+      checkPassword.style.border = "1px solid #f2f2f2";
+      validated = true;
+    }
+  }
+
+  inputNombre.addEventListener("blur", (e) => {
+    testNombre();
+  });
+  inputApellido.addEventListener("blur", (e) => {
+    testApellido();
+  });
+  inputEmail.addEventListener("blur", (e) => {
+    testEmail();
+  });
+  checkPassword.addEventListener("keyup", (e) => {
+    testPassword();
+  });
+
+  return validated ? true : false;
+}
+
+function passwordMatch() {
+  if (inputPassword.value !== checkPassword.value) {
+    inputPassword.style.border = "1px solid red";
+    checkPassword.style.border = "1px solid red";
+    validated = false;
+  } else {
+    inputPassword.style.border = "1px solid green";
+    checkPassword.style.border = "1px solid green";
+    validated = true;
+  }
+}
 /*
 const nombre = document.querySelector("#signup_name");
 const password = document.querySelector("#signup_password");
