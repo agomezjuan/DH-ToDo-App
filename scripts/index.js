@@ -4,7 +4,10 @@ const inputEmail = document.querySelector("#inputEmail");
 const inputPassword = document.querySelector("#inputPassword");
 
 inputEmail.addEventListener("blur", () => {
-  loginValidation();
+  testEmail(inputEmail);
+});
+inputPassword.addEventListener("blur", () => {
+  testPassword(inputPassword);
 });
 
 window.addEventListener("load", () => {
@@ -18,70 +21,78 @@ window.addEventListener("load", () => {
 
 login.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (loginValidation()) iniciarSesion();
+});
 
-  if (loginValidation()) {
-    fetch("https://ctd-todo-api.herokuapp.com/v1/users/login", {
-      method: "POST",
-      body: JSON.stringify({
-        email: inputEmail.value,
-        password: inputPassword.value,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data == "Contraseña incorrecta") {
-          let timerInterval;
-          Swal.fire({
-            icon: "error",
-            title: data,
-            timer: 2000,
-            didOpen: () => {
-              Swal.showLoading();
-              const b = Swal.getHtmlContainer().querySelector("b");
-              timerInterval = setInterval(() => {
-                b.textContent = Swal.getTimerLeft();
-              }, 100);
-            },
-            willClose: () => {
-              clearInterval(timerInterval);
-            },
-          }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-              const inputPassword = document.querySelector("#inputPassword");
-              inputPassword.style.border = "1px solid red";
-              inputPassword.value = "";
-            }
-          });
-        } else if (data.jwt) {
-          let timerInterval;
-          Swal.fire({
-            icon: "success",
-            title: "Bienvenido!",
-            timer: 2000,
-            didOpen: () => {
-              Swal.showLoading();
-              const b = Swal.getHtmlContainer().querySelector("b");
-              timerInterval = setInterval(() => {
-                b.textContent = Swal.getTimerLeft();
-              }, 100);
-            },
-            willClose: () => {
-              clearInterval(timerInterval);
-            },
-          }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-              sessionStorage.setItem("auth", data.jwt);
-              window.location.href = "/mis-tareas.html";
-            }
-          });
-        }
-      })
-      .catch((data) => console.log(data));
+login.addEventListener("keyup", (event) => {
+  event.preventDefault();
+  if (event.key === "Enter") {
+    if (loginValidation()) iniciarSesion();
   }
 });
+
+function iniciarSesion() {
+  fetch("https://ctd-todo-api.herokuapp.com/v1/users/login", {
+    method: "POST",
+    body: JSON.stringify({
+      email: inputEmail.value,
+      password: inputPassword.value,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      if (data == "Contraseña incorrecta") {
+        wrongPassword(data);
+      } else if (data == "El usuario no existe") {
+        usuarioInexistente(data);
+      } else if (data.jwt) {
+        loginExitoso(data);
+      }
+    })
+    .catch((data) => console.log(data));
+}
+
+function wrongPassword(data) {
+  Swal.fire(data, "Verifica tu contraseña e intenta nuevamente", "error");
+
+  const inputPassword = document.querySelector("#inputPassword");
+  inputPassword.style.border = "1px solid red";
+  inputPassword.value = "";
+}
+
+function usuarioInexistente(data) {
+  Swal.fire(data, "Verifica tus datos o crea un nuevo usuario", "error");
+
+  const inputPassword = document.querySelector("#inputPassword");
+  inputPassword.style.border = "1px solid red";
+  inputPassword.value = "";
+}
+
+function loginExitoso(data) {
+  let timerInterval;
+  Swal.fire({
+    icon: "success",
+    title: "Bienvenido!",
+    timer: 2000,
+    didOpen: () => {
+      Swal.showLoading();
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft();
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  }).then((result) => {
+    /* Read more about handling dismissals below */
+    if (result.dismiss === Swal.DismissReason.timer) {
+      sessionStorage.setItem("auth", data.jwt);
+      window.location.href = "/mis-tareas.html";
+    }
+  });
+}
