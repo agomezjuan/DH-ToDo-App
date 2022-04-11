@@ -1,60 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ----------------------------- estilos CSS ----------------------------- -->
+    <link rel="stylesheet" href="./styles/lista-tareas.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ----------------------------- estilos CSS ----------------------------- -->
-  <link rel="stylesheet" href="./styles/lista-tareas.css">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- ------------------- libreria de iconos Fontawesome -------------------- -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
-  <!-- ------------------- libreria de iconos Fontawesome -------------------- -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- ----------------------------- sweet alert ----------------------------- -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- CDN example (unpkg) -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.0/dayjs.min.js"
+      integrity="sha512-KTFpdbCb05CY4l242bLjyaPhoL9vAy4erP1Wkn7Rji0AG6jx6zzGtKkdHc7jUOYOVSmbMbTg728u260CA/Qugg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.0/locale/es.min.js"
+      integrity="sha512-8m1fLs4Xjlz54IkVKOIsiayKLpgjN08B3IyUkM2/yLCIPOCvBzgm5awB8ntsQkoKU395Ndf1BPlnP9MM7HQ4aA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
 
-  <!-- ----------------------------- sweet alert ----------------------------- -->
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- CDN example (unpkg) -->
-  <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <!-- logica de la página -->
+    <script src="./scripts/taks.js" defer></script>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <title>ToDo</title>
+  </head>
 
+  <body>
+    <header>
+      <nav>
+        <a href="#">My ToDo's</a>
+      </nav>
 
-  <!-- logica de la página -->
-  <script src="./scripts/taks.js" defer></script>
+      <div class="user-info">
+        <p>username</p>
+        <div class="user-image"></div>
+        <p id="closeApp">Cerrar sesión</p>
+      </div>
+    </header>
 
-  <title>ToDo</title>
-</head>
+    <form class="nueva-tarea">
+      <div class="not-done"></div>
+      <input id="nuevaTarea" type="text" placeholder="Nueva tarea" />
+      <button type="submit">
+        <img src="./assets/plus.png" alt="Agregar Tarea" />
+      </button>
+    </form>
 
-<body>
-  <header>
-    <nav>
-      <a href="#">My ToDo's</a>
-    </nav>
-
-    <div class="user-info">
-      <p>username</p>
-      <div class="user-image"></div>
-      <p id="closeApp">Cerrar sesión</i>
-      </p>
-    </div>
-  </header>
-
-
-  <form class="nueva-tarea">
-    <div class="not-done "></div>
-    <input id="nuevaTarea" type="text" placeholder="Nueva tarea">
-    <button type="submit">
-      <img src="./assets/plus.png" alt="Agregar Tarea">
-    </button>
-  </form>
-
-
-  <ul class="tareas-pendientes">
-    <div id="skeleton">
-      <li class="tarea">
+    <ul class="tareas-pendientes">
+      <div id="skeleton">
+        <!-- <li class="tarea">
         <div class="not-done"></div>
         <div class="descripcion">
           <p class="nombre">Nueva tarea</p>
@@ -74,16 +82,17 @@
           <p class="nombre">Nueva tarea</p>
           <p class="timestamp">Creada: 15/07/21</p>
         </div>
-      </li>
+      </li> -->
+      </div>
+    </ul>
 
-    </div>
-  </ul>
+    <h2 class="titulo-terminadas">Tareas terminadas</h2>
+    <ul class="tareas-terminadas"></ul>
 
-  <h2 class="titulo-terminadas">Tareas terminadas</h2>
-  <ul class="tareas-terminadas">
-
-  </ul>
-
-</body>
-
+    <!-- ----------------------------- Animate On Scroll Library ----------------------------- -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+  </body>
 </html>
