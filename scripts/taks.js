@@ -1,50 +1,75 @@
 window.addEventListener("load", () => {
-  const auth = sessionStorage.getItem("auth");
+  let auth = sessionStorage.getItem("auth");
   if (typeof auth === "undefined") {
     sessionStorage.removeItem("auth");
     auth = null;
   }
+
+  /** Si existe la llave de autenticación */
   if (auth) {
-    fetch("https://ctd-todo-api.herokuapp.com/v1/users/getMe", {
-      method: "GET",
-      headers: {
-        Authorization: auth,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        const user = document.querySelector(".user-info p");
-        user.innerHTML = `ID: ${data.id} - ${data.firstName} ${data.lastName}`;
-      });
+    /** Obtener información de usuario */
+    getUserData(auth);
   } else {
-    let timerInterval;
-    Swal.fire({
-      icon: "success",
-      title: "Acceso Restringido!",
-      html: "Inicie sesión o regístrese para ver las tareas",
-      timer: 2000,
-      didOpen: () => {
-        Swal.showLoading();
-        const b = Swal.getHtmlContainer().querySelector("b");
-        timerInterval = setInterval(() => {
-          b.textContent = Swal.getTimerLeft();
-        }, 100);
-      },
-      willClose: () => {
-        clearInterval(timerInterval);
-      },
-    }).then((result) => {
-      /* Read more about handling dismissals below */
-      if (result.dismiss === Swal.DismissReason.timer) {
-        window.location.href = "/index.html";
-      }
-    });
+    /** De lo contrario redirige al inicio */
+    accesoRestringido();
   }
 });
 
+/**
+ * Obtener la información del Usuario
+ * */
+function getUserData(auth) {
+  fetch("https://ctd-todo-api.herokuapp.com/v1/users/getMe", {
+    method: "GET",
+    headers: {
+      Authorization: auth,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.table(data);
+      const user = document.querySelector(".user-info p");
+      user.innerHTML = `ID: ${data.id} - ${data.firstName} ${data.lastName}`;
+    });
+}
+
+/**
+ * Cerrar la aplicación
+ * */
 const closeApp = document.querySelector("#closeApp");
-closeApp.addEventListener("click", () => {
+closeApp.addEventListener("click", sesionFinalizada);
+
+/**
+ * Mensajes de alerta
+ * */
+// Acceso restringido
+function accesoRestringido() {
+  let timerInterval;
+  Swal.fire({
+    icon: "success",
+    title: "Acceso Restringido!",
+    html: "Inicie sesión o regístrese para ver las tareas",
+    timer: 2000,
+    didOpen: () => {
+      Swal.showLoading();
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft();
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  }).then((result) => {
+    /* Read more about handling dismissals below */
+    if (result.dismiss === Swal.DismissReason.timer) {
+      window.location.href = "/index.html";
+    }
+  });
+}
+
+// Sesión finalizada
+function sesionFinalizada() {
   let timerInterval;
   Swal.fire({
     icon: "success",
@@ -68,4 +93,4 @@ closeApp.addEventListener("click", () => {
       window.location.href = "/index.html";
     }
   });
-});
+}
