@@ -16,7 +16,7 @@ window.addEventListener("load", () => {
   if (auth) {
     // Obtener información de usuario */
     obtenerDatosUsuario(auth);
-    cargartareasViejas(auth);
+    cargarTareasViejas(auth);
   } else {
     // De lo contrario redirigir al inicio */
     accesoRestringido();
@@ -55,7 +55,7 @@ function obtenerDatosUsuario(auth) {
 /**
  * Obtener lista de tareas
  * */
-async function cargartareasViejas(auth) {
+async function cargarTareasViejas(auth) {
   await fetch("https://ctd-todo-api.herokuapp.com/v1/tasks", {
     method: "GET",
     headers: {
