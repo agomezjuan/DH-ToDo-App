@@ -1,12 +1,9 @@
 // Constantes
-const inputNombre = document.querySelector("#inputNombre");
-const inputApellido = document.querySelector("#inputApellido");
-const inputEmail = document.querySelector("#inputEmail");
-const inputPassword = document.querySelector("#inputPassword");
-const checkPassword = document.querySelector("#checkPassword");
 
 // Validacion de inicio de sesion
 function loginValidation() {
+  const inputNombre = document.querySelector("#inputNombre");
+  const inputApellido = document.querySelector("#inputApellido");
   let validated;
   const regexEmail = /^[^@\s]+@[^@\.\s]+(\.[^@\.\s]+)+$/;
 
@@ -33,6 +30,11 @@ function loginValidation() {
 
 //Validacion de registro de nuevo usuario
 function signupValidation() {
+  const inputNombre = document.querySelector("#inputNombre");
+  const inputApellido = document.querySelector("#inputApellido");
+  const inputEmail = document.querySelector("#inputEmail");
+  const inputPassword = document.querySelector("#inputPassword");
+  const checkPassword = document.querySelector("#checkPassword");
   let validated;
   const regexNombre = /^[a-zA-Z]+(?:\s+[a-zA-Z]+)*$/;
   const regexEmail = /^[^@\s]+@[^@\.\s]+(\.[^@\.\s]+)+$/;
@@ -96,18 +98,13 @@ function signupValidation() {
     }
   }
 
-  inputNombre.addEventListener("blur", (e) => {
-    testNombre();
-  });
-  inputApellido.addEventListener("blur", (e) => {
-    testApellido();
-  });
-  inputEmail.addEventListener("blur", (e) => {
-    testEmail();
-  });
-  checkPassword.addEventListener("keyup", (e) => {
-    testPassword();
-  });
+  testNombre();
+
+  testApellido();
+
+  testEmail();
+
+  testPassword();
 
   return validated ? true : false;
 }
