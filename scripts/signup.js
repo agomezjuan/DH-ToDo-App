@@ -16,7 +16,12 @@ signupForm.addEventListener("submit", (event) => {
     fetch("https://ctd-todo-api.herokuapp.com/v1/users", {
       method: "POST",
       body: JSON.stringify(
-        normalize(inputNombre, inputApellido, inputEmail, inputPassword)
+        normalize(
+          inputNombre.value,
+          inputApellido.value,
+          inputEmail.value,
+          inputPassword.value
+        )
       ),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
