@@ -4,10 +4,14 @@ const inputEmail = document.querySelector("#inputEmail");
 const inputPassword = document.querySelector("#inputPassword");
 
 inputEmail.addEventListener("blur", () => {
-  testEmail(inputEmail);
+  if (!testEmail(inputEmail)) {
+    inputEmail.setAttribute("placeholder", "Escribe tu correo");
+  }
 });
 inputPassword.addEventListener("blur", () => {
-  testPassword(inputPassword);
+  if (!testPassword(inputPassword)) {
+    inputPassword.setAttribute("placeholder", "Escribe tu contraseña");
+  }
 });
 
 window.addEventListener("load", () => {
