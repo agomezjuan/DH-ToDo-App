@@ -1,11 +1,12 @@
 // Constantes
 const inputTask = document.querySelector("#nuevaTarea");
 const taskCommit = document.querySelector("form.nueva-tarea");
+dayjs.locale("es");
 
 /**
  * Verificar la sesion del usuario
  */
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
   let auth = sessionStorage.getItem("auth");
   if (typeof auth === "undefined") {
     sessionStorage.removeItem("auth");
@@ -15,8 +16,8 @@ window.addEventListener("load", () => {
   // Si existe la llave de autenticación */
   if (auth) {
     // Obtener información de usuario */
-    obtenerDatosUsuario(auth);
-    cargarTareasViejas(auth);
+    await obtenerDatosUsuario(auth);
+    await cargarTareasViejas(auth);
   } else {
     // De lo contrario redirigir al inicio */
     accesoRestringido();
@@ -37,56 +38,63 @@ taskCommit.addEventListener("submit", (e) => {
 /**
  * Obtener la información del Usuario
  * */
-function obtenerDatosUsuario(auth) {
-  fetch("https://ctd-todo-api.herokuapp.com/v1/users/getMe", {
-    method: "GET",
-    headers: {
-      Authorization: auth,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.table(data);
-      const user = document.querySelector(".user-info p");
-      user.innerHTML = `ID: ${data.id} - ${data.firstName} ${data.lastName}`;
-    });
+async function obtenerDatosUsuario(auth) {
+  const response = await fetch(
+    "https://ctd-todo-api.herokuapp.com/v1/users/getMe",
+    {
+      method: "GET",
+      headers: {
+        Authorization: auth,
+      },
+    }
+  );
+  const data = await response.json();
+
+  console.table(data);
+  const user = document.querySelector(".user-info p");
+  user.innerHTML = `ID: ${data.id} - ${data.firstName} ${data.lastName}`;
 }
 
 /**
  * Obtener lista de tareas
  * */
 async function cargarTareasViejas(auth) {
-  await fetch("https://ctd-todo-api.herokuapp.com/v1/tasks", {
+  const response = await fetch("https://ctd-todo-api.herokuapp.com/v1/tasks", {
     method: "GET",
     headers: {
       Authorization: auth,
     },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.table(data);
-      const taskBlock = document.querySelector("#skeleton");
+  });
 
-      data.forEach((tarea) => {
-        const taskTemplate = `<li data-aos="fade-up" class="tarea">
+  const data = await response.json();
+
+  console.table(data);
+  const taskBlock = document.querySelector("#skeleton");
+
+  data
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    .forEach((tarea) => {
+      let time = dayjs(tarea.createdAt).format("h:mm a, D MMMM YYYY");
+      const taskTemplate = `<li data-aos="fade-up" class="tarea">
             <div class="not-done"></div>
             <div class="descripcion">
             <p class="nombre">${tarea.description}</p>
-            <p class="timestamp">Creada: ${dayjs(tarea.createdAt)}</p>
+            <p class="timestamp">Creada: <br>${time}</p>
             </div>
             </li>`;
 
-        taskBlock.insertAdjacentHTML("afterbegin", taskTemplate);
-      });
+      taskBlock.insertAdjacentHTML("afterbegin", taskTemplate);
     });
+
+  let loadSkeleton = document.querySelector("#skeleton");
+  loadSkeleton.removeAttribute("id");
 }
 
 /**
  * Crear una tarea nueva
  * */
 async function crearTarea(auth) {
-  console.log(inputTask.value);
-  await fetch("https://ctd-todo-api.herokuapp.com/v1/tasks", {
+  const response = await fetch("https://ctd-todo-api.herokuapp.com/v1/tasks", {
     method: "POST",
     body: JSON.stringify({
       description: inputTask.value,
@@ -96,22 +104,21 @@ async function crearTarea(auth) {
       Authorization: auth,
       "Content-type": "application/json; charset=UTF-8",
     },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.table(data);
+  });
 
-      const taskTemplate = `<li data-aos="fade-up" class="tarea">
-        <div class="not-done"></div>
-        <div class="descripcion">
-          <p class="nombre">${data.description}</p>
-          <p class="timestamp">Creada: ${dayjs(data.createdAt)}</p>
-        </div>
-      </li>`;
+  const data = await response.json();
+  console.table(data);
+  let time = dayjs(data.createdAt).format("h:mm a, D MMMM YYYY");
+  const taskTemplate = `<li data-aos="fade-up" class="tarea">
+    <div class="not-done"></div>
+    <div class="descripcion">
+        <p class="nombre">${data.description}</p>
+        <p class="timestamp">Creada: <br>${time}</p>
+    </div>
+    </li>`;
 
-      const taskBlock = document.querySelector("#skeleton");
-      taskBlock.insertAdjacentHTML("afterbegin", taskTemplate);
-    });
+  const taskBlock = document.querySelector(".tareas-pendientes div");
+  taskBlock.insertAdjacentHTML("afterbegin", taskTemplate);
 }
 
 /**
