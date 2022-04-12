@@ -1,3 +1,12 @@
+window.addEventListener("load", () => {
+  let sesion = sessionStorage.getItem("auth");
+  if (!sesion || sesion == undefined) {
+    sessionStorage.removeItem("auth");
+  } else {
+    window.location.href = "/mis-tareas.html";
+  }
+
+
 // Constantes
 const login = document.querySelector("form");
 const inputEmail = document.querySelector("#inputEmail");
@@ -14,14 +23,7 @@ inputPassword.addEventListener("blur", () => {
   }
 });
 
-window.addEventListener("load", () => {
-  let sesion = sessionStorage.getItem("auth");
-  if (!sesion || sesion == undefined) {
-    sessionStorage.removeItem("auth");
-  } else {
-    window.location.href = "/mis-tareas.html";
-  }
-});
+
 
 login.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -108,3 +110,4 @@ function loginExitoso(data) {
     }
   });
 }
+});
